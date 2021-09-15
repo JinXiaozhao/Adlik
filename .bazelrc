@@ -8,6 +8,8 @@ build --define=grpc_no_ares=true
 # OpenVINO.
 
 build:openvino --define=runtime=openvino
+build:openvino-igpu --define=runtime=openvino
+build:openvino-igpu --define=using_igpu=true
 
 # TensorFlow (CPU).
 

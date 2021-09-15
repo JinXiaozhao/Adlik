@@ -2,6 +2,11 @@ load("//adlik_serving:serving.bzl", "serving_cc_library")
 
 package(default_visibility = ["//adlik_serving:internal"])
 
+config_setting(
+    name="openvino-igpu",
+    values={"define": "using_igpu=true"},
+)
+
 serving_cc_library(
     name = "ir_model",
     srcs = [
@@ -26,5 +31,9 @@ serving_cc_library(
         "@local_config_openvino//:libinference_engine",
         "@local_config_openvino//:libinference_engine_legacy",
         "@org_tensorflow//tensorflow/core:lib",
-    ],
+    ], 
+    copts= select({
+        ":openvino-igpu": ["-DADLIK_SERVING_OPENVINO_USE_IGPU"],
+        "//conditions:default": [],
+    }),    
 )

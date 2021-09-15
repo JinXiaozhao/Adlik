@@ -262,7 +262,11 @@ tensorflow::Status IRModel::init() {
     network.setBatchSize(config.max_batch_size());
   }
   // 4. set instance
+#ifdef ADLIK_SERVING_OPENVINO_USE_IGPU
+  ExecutableNetwork executableNetwork = core.LoadNetwork(network, "GPU");
+#else
   ExecutableNetwork executableNetwork = core.LoadNetwork(network, "CPU");
+#endif
   for (const auto& group : config.instance_group()) {
     for (int i = 0; i != group.count(); ++i) {
       std::unique_ptr<BatchProcessor> instance;
